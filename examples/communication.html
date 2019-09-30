@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 100%; height: 100%">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Communication example</title>
+  <script src="../dist/parent.js"></script>
+</head>
+<body style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background-color: cadetblue">
+  <div id="container" style="width: 50%; height: 50%; background-color: white;"></div>
+</body>
+<script>
+  const iframy = parentFramy.create({
+    dimensions: {
+      width: '100%',
+      height: '100%',
+    },
+    id: 'example',
+    props: {
+      name: 'Alex',
+    },
+    url: './child.html',
+  });
+
+  iframy.render('#container');
+  window.iframy = iframy;
+</script>
+</html>

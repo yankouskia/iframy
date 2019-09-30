@@ -1,0 +1,28 @@
+{
+  "name": "iframy",
+  "version": "0.0.1",
+  "description": "Library for creating cross-domain components",
+  "main": "index.js",
+  "repository": "git@github.com:yankouskia/iframy.git",
+  "author": "yankouskia <aleksandr.yankovskiy@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/plugin-transform-object-assign": "^7.2.0",
+    "@babel/preset-env": "^7.6.2",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
+    "codecov": "^3.6.1",
+    "jest": "^24.9.0",
+    "rollup": "^1.21.4",
+    "rollup-plugin-auto-external": "^2.0.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-uglify": "^6.0.3"
+  },
+  "scripts": {
+    "build": "NODE_ENV=production rollup -c"
+  }
+}
