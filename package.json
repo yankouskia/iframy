@@ -1,7 +1,7 @@
 {
   "name": "iframy",
-  "version": "0.0.1",
-  "description": "Library for creating cross-domain components",
+  "version": "0.0.2",
+  "description": "Library for creating & controlling cross-domain components",
   "main": "index.js",
   "repository": "git@github.com:yankouskia/iframy.git",
   "author": "yankouskia <aleksandr.yankovskiy@gmail.com>",
