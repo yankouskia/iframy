@@ -1,18 +1,17 @@
 {
-  "plugins": [
-    "@babel/plugin-transform-object-assign"
-  ],
-  "presets": [
-    [
-      "@babel/preset-env",
-      {
-        "targets": {
-          "browsers": [
-            "> 1%",
-            "safari >= 8"
-          ]
-        }
+  "presets": [[
+    "@babel/preset-env",
+    {
+      "targets": {
+        "browsers": [
+          "> 1%",
+          "safari >= 8"
+        ]
       }
-    ]
+    }
+  ], "@babel/typescript"],
+  "plugins": [
+    "@babel/proposal-class-properties",
+    "@babel/proposal-object-rest-spread"
   ]
 }

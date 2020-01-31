@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" style="width: 100%; height: 100%">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Communication example</title>
+  <script src="../dist/parent.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Parent window</h2>
+    <div class="option">
+      <b>Send message to Child</b>
+      <input id="message">
+      <button id="send-message">Send</button>
+    </div>
+    <div class="option">
+      <b>Call API (concat strings) with payload:</b>
+      <input id="api-request">
+      <button id="call-api">CALL</button>
+      <b>Response:</b>
+      <input disabled style="background-color: lightgray;" id="api-response">
+    </div>
+    <div class="option">
+      <b>Received message:</b>
+      <input disabled style="background-color: lightgray;" id="response">
+    </div>
+  </div>
+  <div class="container" id="app"></div>
+</body>
+<style>
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: cadetblue;
+  }
+  input {
+    width: 80%;
+  }
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 80%;
+    border: 2px solid black;
+    margin: 4px;
+    padding: 4px
+  }
+</style>
+<script>
+  (async () => {
+    const iframy = window.iframy.IFramyParent.create({
+      dimensions: {
+        width: '80%',
+        height: '80%',
+      },
+      props: {
+        name: 'Alex',
+      },
+      scrolling: true,
+      url: './child.html',
+    });
+
+    await iframy.render('#app');
+    window.iframy = iframy;
+
+    iframy.on('msg', data => {
+      document.querySelector('#response').value = data;
+    });
+
+    document.querySelector('#send-message').addEventListener('click', () => {
+      const data = document.querySelector('#message').value || '<empty message>';
+      iframy.emit('msg', data);
+    });
+
+    document.querySelector('#call-api').addEventListener('click', async () => {
+      const data = document.querySelector('#api-request').value || '<empty message>';
+      const result = await iframy.API.sendMessage(data);
+      document.querySelector('#api-response').value = result;
+    });
+  })()
+</script>
+</html>
