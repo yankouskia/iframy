@@ -165,6 +165,14 @@ const iframy = await IFramyChild.create({
 });
 ```
 
+#### props
+
+Data, passed from parent. Useful to receive initial data from parent window
+
+```js
+const data = iframy.props;
+```
+
 #### emit
 
 Method to send message to parent component

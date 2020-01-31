@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Communication example</title>
-  <script src="../dist/child.js"></script>
+  <script src="../child.js"></script>
 </head>
 <body>
   <div class="container">
@@ -67,6 +67,8 @@
       },
     });
     window.iframy = iframy;
+
+    console.log('PROPS:', iframy.props);
 
     iframy.on('msg', data => {
       document.querySelector('#response').value = data;
