@@ -41,8 +41,11 @@ yarn add iframy
 Use method to initiate instance and pass necessary props / iframe configuration
 
 `dimensions` - object with `width` and `height` properties, applied to iframe
+
 `props` - any serializable initial data to send to child
+
 `scrolling` - param to highlight whether content inside iframe should be scrollable
+
 `url` - url to open inside child iframe
 
 ```js
