@@ -2,6 +2,7 @@ import 'regenerator-runtime/runtime';
 import { parseMessage, createMessage } from './helpers';
 import { INIT_EVENT_TYPE_REQUEST, IFRAMY_ID_KEY, INIT_EVENT_TYPE_RESPONSE, EMIT_CHILD_TO_PARENT_EVENT, EMIT_PARENT_TO_CHILD_EVENT, CALL_API_REQUEST_EVENT, CALL_API_RESPONSE_EVENT } from './constants';
 import { MessageData, Listener } from './types';
+import { COERCING_ERROR, REGULAR_ERROR } from './error-types';
 import { Bus } from './Bus';
 
 type ApiListenersType = {
@@ -40,12 +41,21 @@ export class IFramyChild {
   }
 
   private async globalListener(event: MessageEvent) {
+    let messageData: MessageData;
+
+    try {
+      messageData = parseMessage(event.data);
+    } catch (e) {
+      console.warn('Message received, but was not parsed');
+      return;
+    }
+
     const {
       id,
       data,
       name,
       type,
-    } = parseMessage(event.data);
+    } = messageData;
 
     if (type === INIT_EVENT_TYPE_REQUEST) {
       const { props } = data;
@@ -63,13 +73,24 @@ export class IFramyChild {
     }
 
     if (type === CALL_API_REQUEST_EVENT) {
-      const result = await this.api[name](data);
-      this.sendMessage({
-        id,
-        data: result,
-        name,
-        type: CALL_API_RESPONSE_EVENT,
-      });
+      try {
+        const result = await this.api[name](data);
+        this.sendMessage({
+          id,
+          data: result,
+          name,
+          type: CALL_API_RESPONSE_EVENT,
+        });
+      } catch (e) {
+        const { message } = e;
+
+        this.sendMessage({
+          id,
+          meta: { error: REGULAR_ERROR, message },
+          name,
+          type: CALL_API_RESPONSE_EVENT,
+        });
+      }
     }
   }
 
@@ -79,13 +100,28 @@ export class IFramyChild {
     name,
     type,
   }: MessageData) {
-    const msg = createMessage({
-      id,
-      data,
-      name,
-      type,
-      uid: this.uid,
-    });
+    let msg: string;
+
+    try {
+      msg = createMessage({
+        id,
+        data,
+        name,
+        type,
+        uid: this.uid,
+      });
+    } catch (e) {
+      console.warn('Message was not serialized successfully, please check the data you passed');
+      msg = createMessage({
+        id,
+        meta: {
+          errorType: COERCING_ERROR,
+        },
+        name,
+        type,
+        uid: this.uid,
+      });
+    }
 
     window.parent.postMessage(msg, '*');
   }
