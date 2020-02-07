@@ -156,14 +156,14 @@ export class IFramyParent {
         if (!error) return response;
 
         if (error === COERCING_ERROR) {
-          throw 'Message was not serialized successfully in child component';
+          throw new Error('Message was not serialized successfully in child component');
         }
 
         if(error === REGULAR_ERROR) {
           throw new Error(meta.message || 'Error occured inside child compomnent');
         }
 
-        throw 'Unknown error. Please check method implementation in child component';
+        throw new Error('Unknown error. Please check method implementation in child component');
       };
 
       this.API[name] = fn;
