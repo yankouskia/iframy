@@ -3,7 +3,7 @@ import { parseMessage, createMessage } from './helpers';
 import { IFRAMY_ID_KEY, INIT_EVENT_TYPE_RESPONSE, INIT_EVENT_TYPE_REQUEST, EMIT_PARENT_TO_CHILD_EVENT, EMIT_CHILD_TO_PARENT_EVENT, CALL_API_REQUEST_EVENT, CALL_API_RESPONSE_EVENT } from './constants';
 import { MessageData, Listener } from './types';
 import { Bus } from './Bus';
-import { COERCING_ERROR } from './error-types';
+import { COERCING_ERROR, REGULAR_ERROR } from './error-types';
 
 type Dimensions = {
   width?: string,
@@ -123,6 +123,7 @@ export class IFramyParent {
         type,
       });
     } catch (e) {
+      console.warn('Message was not serialized successfully, please check the data you passed');
       msg = createMessage({
         id,
         meta: {
@@ -149,8 +150,20 @@ export class IFramyParent {
           type: CALL_API_REQUEST_EVENT,
         });
 
-        const { data: response } = await this.waitForMessage(CALL_API_RESPONSE_EVENT, id);
-        return response;
+        const { data: response, meta = {} } = await this.waitForMessage(CALL_API_RESPONSE_EVENT, id);
+        const { error } = meta;
+
+        if (!error) return response;
+
+        if (error === COERCING_ERROR) {
+          throw 'Message was not serialized successfully in child component';
+        }
+
+        if(error === REGULAR_ERROR) {
+          throw new Error(meta.message || 'Error occured inside child compomnent');
+        }
+
+        throw 'Unknown error. Please check method implementation in child component';
       };
 
       this.API[name] = fn;
